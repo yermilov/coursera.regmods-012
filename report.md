@@ -69,7 +69,7 @@ summary(mtcars)
 ##  Max.   :1.0000   Max.   :5.000   Max.   :8.000
 ```
 
-Dataset contains following observations:
+Dataset contains following variables:
 
 1 | mpg	 | Miles/(US) gallon
 2 | cyl  | Number of cylinders
@@ -123,5 +123,81 @@ plot(mtcars)
 ![plot of chunk unnamed-chunk-3](figure/unnamed-chunk-3-1.png) 
 
 ## Building data model
+
+Let's try to build data model based on all possible variables:
+
+
+```r
+fit1 <- lm(mpg ~ am, mtcars)
+fit2 <- lm(mpg ~ am + cyl, mtcars)
+fit3 <- lm(mpg ~ am + cyl + disp, mtcars)
+fit4 <- lm(mpg ~ am + cyl + disp + hp, mtcars)
+fit5 <- lm(mpg ~ am + cyl + disp + hp + drat, mtcars)
+fit6 <- lm(mpg ~ am + cyl + disp + hp + drat + wt, mtcars)
+fit7 <- lm(mpg ~ am + cyl + disp + hp + drat + wt + qsec, mtcars)
+fit8 <- lm(mpg ~ am + cyl + disp + hp + drat + wt + qsec + vs, mtcars)
+fit8 <- lm(mpg ~ am + cyl + disp + hp + drat + wt + qsec + vs + gear, mtcars)
+fit9 <- lm(mpg ~ am + cyl + disp + hp + drat + wt + qsec + vs + gear + carb, mtcars)
+
+anova(fit1, fit2, fit3, fit4, fit5, fit6, fit7, fit8, fit9)
+```
+
+```
+## Analysis of Variance Table
+## 
+## Model 1: mpg ~ am
+## Model 2: mpg ~ am + cyl
+## Model 3: mpg ~ am + cyl + disp
+## Model 4: mpg ~ am + cyl + disp + hp
+## Model 5: mpg ~ am + cyl + disp + hp + drat
+## Model 6: mpg ~ am + cyl + disp + hp + drat + wt
+## Model 7: mpg ~ am + cyl + disp + hp + drat + wt + qsec
+## Model 8: mpg ~ am + cyl + disp + hp + drat + wt + qsec + vs + gear
+## Model 9: mpg ~ am + cyl + disp + hp + drat + wt + qsec + vs + gear + carb
+##   Res.Df    RSS Df Sum of Sq       F   Pr(>F)    
+## 1     30 720.90                                  
+## 2     28 264.50  2    456.40 28.4297 7.89e-06 ***
+## 3     27 230.46  1     34.04  4.2402  0.05728 .  
+## 4     26 183.04  1     47.42  5.9078  0.02809 *  
+## 5     25 182.38  1      0.66  0.0820  0.77855    
+## 6     24 150.10  1     32.28  4.0216  0.06331 .  
+## 7     23 141.21  1      8.89  1.1081  0.30916    
+## 8     20 134.00  3      7.20  0.2992  0.82547    
+## 9     15 120.40  5     13.60  0.3388  0.88144    
+## ---
+## Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+```
+
+As we can see, besides transmission information, number of cylinders and gross horsepower pass sygnificance test. Let's build model, based on them:
+
+
+```r
+fit <- lm(mpg ~ am + cyl + hp, mtcars)
+summary(fit)
+```
+
+```
+## 
+## Call:
+## lm(formula = mpg ~ am + cyl + hp, data = mtcars)
+## 
+## Residuals:
+##    Min     1Q Median     3Q    Max 
+## -5.231 -1.535 -0.141  1.408  5.322 
+## 
+## Coefficients:
+##             Estimate Std. Error t value Pr(>|t|)    
+## (Intercept) 27.29590    1.42394  19.169  < 2e-16 ***
+## am1          4.15786    1.25655   3.309  0.00266 ** 
+## cyl6        -3.92458    1.53751  -2.553  0.01666 *  
+## cyl8        -3.53341    2.50279  -1.412  0.16943    
+## hp          -0.04424    0.01458  -3.035  0.00527 ** 
+## ---
+## Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+## 
+## Residual standard error: 2.703 on 27 degrees of freedom
+## Multiple R-squared:  0.8249,	Adjusted R-squared:  0.7989 
+## F-statistic: 31.79 on 4 and 27 DF,  p-value: 7.401e-10
+```
 
 ## Summary
