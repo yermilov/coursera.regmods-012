@@ -10,3 +10,38 @@ Looking at a data set of a collection of cars, we are interested in exploring th
 
 * Is an automatic or manual transmission better for MPG
 * Quantify the MPG difference between automatic and manual transmissions
+
+## Exploring the data
+
+Let's load dataset and look at the data primary features:
+
+```{r}
+library(datasets)
+data(mtcars)
+
+dim(mtcars)
+head(mtcars)
+summary(mtcars)
+```
+
+As we can see, there are bunch of variables that should be factors rather than numeric. Let's transofrm them appropriately:
+
+```{r}
+mtcars$cyl = factor(mtcars$cyl)
+mtcars$vs = factor(mtcars$vs)
+mtcars$am = factor(mtcars$am)
+mtcars$gear = factor(mtcars$gear)
+mtcars$carb = factor(mtcars$carb)
+
+summary(mtcars)
+```
+
+Let's look at relationships between different variables:
+
+```{r}
+plot(mtcars)
+```
+
+## Building data model
+
+## Summary
