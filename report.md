@@ -18,6 +18,7 @@ Let's load dataset and look at the data primary features:
 
 ```r
 library(datasets)
+
 data(mtcars)
 
 dim(mtcars)
@@ -71,17 +72,17 @@ summary(mtcars)
 
 Dataset contains following variables:
 
-1 | mpg	 | Miles/(US) gallon
-2 | cyl  | Number of cylinders
-3 | disp | Displacement (cu.in.)
-4 | hp   | Gross horsepower
-5 | drat | Rear axle ratio
-6 | wt   | Weight (lb/1000)
-7 | qsec | 1/4 mile time
-8 | vs   | V/S
-9 | am   | Transmission (0 = automatic, 1 = manual)
-10| gear | Number of forward gears
-11| carb | Number of carburetors
+1. mpg - Miles/(US) gallon
+1. cyl - Number of cylinders
+1. disp - Displacement (cu.in.)
+1. hp - Gross horsepower
+1. drat - Rear axle ratio
+1. wt - Weight (lb/1000)
+1. qsec - 1/4 mile time
+1. vs - V/S
+1. am - Transmission (0 = automatic, 1 = manual)
+1. gear - Number of forward gears
+1. carb - Number of carburetors
 
 As we can see, there are bunch of variables that should be factors rather than numeric. Let's transofrm them appropriately:
 
@@ -116,6 +117,14 @@ summary(mtcars)
 Let's look at relationships between different variables:
 
 
+```r
+library(GGally)
+library(ggplot2)
+
+ggpairs(mtcars, lower = list(continuous = "smooth"), params = c(method = "loess"))
+```
+
+![plot of chunk unnamed-chunk-3](figure/unnamed-chunk-3-1.png) 
 
 ## Building data model
 
@@ -163,7 +172,7 @@ anova(fit1, fit2, fit3, fit4, fit5, fit6, fit7, fit8, fit9)
 ## Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
 ```
 
-As we can see, besides transmission information, number of cylinders and gross horsepower pass sygnificance test. Now, let's check if interactions between these values are significant:
+As we can see, besides transmission information, adding number of cylinders and gross horsepower pass sygnificance test. Now, let's check if interactions between these values are significant:
 
 
 ```r
@@ -224,21 +233,49 @@ summary(fit)
 ## F-statistic: 31.79 on 4 and 27 DF,  p-value: 7.401e-10
 ```
 
-As we can see, manual transmission brings more miles per gallon with mean value 4.16 and standard error 1.25. So, this value is significant based on t-test, for >95% confidence interval.
+As we can see, manual transmission brings more miles per gallon with mean value 4.1578565 and standard error 1.25655. So, this value is significant based on t-test, for >95% confidence interval.
 
 Let's plot given model:
 
 
+```r
+ggplot(mtcars, aes(x = am, y = mpg, group = 1)) + 
+geom_point(aes(color = cyl)) + 
+geom_smooth(method = "lm", formula = y ~ x) +
+labs(x = 'Transmission (0 = automatic, 1 = manual)') +
+labs(y = 'Miles/(US) gallon') +
+labs(title = 'Miles per gallon modelled by transmission type and number of cylinders')
+```
+
+![plot of chunk unnamed-chunk-7](figure/unnamed-chunk-7-1.png) 
+
+
+```r
+ggplot(mtcars, aes(x = am, y = mpg, group = 1)) + 
+geom_point(aes(color = hp)) + 
+geom_smooth(method = "lm", formula = y ~ x) +
+labs(x = 'Transmission (0 = automatic, 1 = manual)') +
+labs(y = 'Miles/(US) gallon') +
+labs(title = 'Miles per gallon modelled by transmission type and gross horsepower')
+```
+
+![plot of chunk unnamed-chunk-8](figure/unnamed-chunk-8-1.png) 
 
 And finally let's look at some diagnostics:
 
 
+```r
+par(mfrow = c(2, 2))
+plot(fit)
+```
 
-As we can see,
+![plot of chunk unnamed-chunk-9](figure/unnamed-chunk-9-1.png) 
+
+As we can see, our model is acceptable and can be considered significant for investigations.
 
 ## Summary
 
 So, final conclusion is that:
 * we can build acceptable model of relation between miles per gallon value and transmission type, number of cylinders and gross horsepower
-* manual transmission brings more miles per gallon with mean value 4.16 and standard error 1.25
+* manual transmission brings more miles per gallon with mean value 4.1578565 and standard error 1.25655
 * manual transmission is significantly better than automatic for miles per gallon
