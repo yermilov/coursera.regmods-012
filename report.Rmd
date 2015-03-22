@@ -82,4 +82,6 @@ fit <- lm(mpg ~ am + cyl + hp, mtcars)
 summary(fit)
 ```
 
+As we can see, manual transmission brings more miles per gallon with mean value 4.16 and standard error 1.25. So, this value is significant based on t-test, for >95% confidence interval.
+
 ## Summary
