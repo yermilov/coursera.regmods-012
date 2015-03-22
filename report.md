@@ -116,11 +116,6 @@ summary(mtcars)
 Let's look at relationships between different variables:
 
 
-```r
-plot(mtcars)
-```
-
-![plot of chunk unnamed-chunk-3](figure/unnamed-chunk-3-1.png) 
 
 ## Building data model
 
@@ -168,7 +163,36 @@ anova(fit1, fit2, fit3, fit4, fit5, fit6, fit7, fit8, fit9)
 ## Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
 ```
 
-As we can see, besides transmission information, number of cylinders and gross horsepower pass sygnificance test. Let's build model, based on them:
+As we can see, besides transmission information, number of cylinders and gross horsepower pass sygnificance test. Now, let's check if interactions between these values are significant:
+
+
+```r
+fit1 <- lm(mpg ~ am + cyl + hp, mtcars)
+fit2 <- lm(mpg ~ am + cyl + hp + am*cyl, mtcars)
+fit3 <- lm(mpg ~ am + cyl + hp + am*cyl + am*hp, mtcars)
+fit4 <- lm(mpg ~ am + cyl + hp + am*cyl + am*hp + cyl*hp, mtcars)
+fit5 <- lm(mpg ~ am + cyl + hp + am*cyl + am*hp + cyl*hp + am*cyl*hp, mtcars)
+anova(fit1, fit2, fit3, fit4, fit5)
+```
+
+```
+## Analysis of Variance Table
+## 
+## Model 1: mpg ~ am + cyl + hp
+## Model 2: mpg ~ am + cyl + hp + am * cyl
+## Model 3: mpg ~ am + cyl + hp + am * cyl + am * hp
+## Model 4: mpg ~ am + cyl + hp + am * cyl + am * hp + cyl * hp
+## Model 5: mpg ~ am + cyl + hp + am * cyl + am * hp + cyl * hp + am * cyl * 
+##     hp
+##   Res.Df    RSS Df Sum of Sq      F Pr(>F)
+## 1     27 197.20                           
+## 2     25 187.04  2   10.1614 0.6160 0.5500
+## 3     24 186.30  1    0.7400 0.0897 0.7676
+## 4     22 167.90  2   18.3990 1.1154 0.3473
+## 5     20 164.95  2    2.9499 0.1788 0.8376
+```
+
+As we can see, interactions have no significance. So let's take original model:
 
 
 ```r
@@ -200,4 +224,21 @@ summary(fit)
 ## F-statistic: 31.79 on 4 and 27 DF,  p-value: 7.401e-10
 ```
 
+As we can see, manual transmission brings more miles per gallon with mean value 4.16 and standard error 1.25. So, this value is significant based on t-test, for >95% confidence interval.
+
+Let's plot given model:
+
+
+
+And finally let's look at some diagnostics:
+
+
+
+As we can see,
+
 ## Summary
+
+So, final conclusion is that:
+* we can build acceptable model of relation between miles per gallon value and transmission type, number of cylinders and gross horsepower
+* manual transmission brings more miles per gallon with mean value 4.16 and standard error 1.25
+* manual transmission is significantly better than automatic for miles per gallon

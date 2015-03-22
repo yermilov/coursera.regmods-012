@@ -53,7 +53,6 @@ summary(mtcars)
 Let's look at relationships between different variables:
 
 ```{r}
-plot(mtcars)
 ```
 
 ## Building data model
@@ -75,7 +74,18 @@ fit9 <- lm(mpg ~ am + cyl + disp + hp + drat + wt + qsec + vs + gear + carb, mtc
 anova(fit1, fit2, fit3, fit4, fit5, fit6, fit7, fit8, fit9)
 ```
 
-As we can see, besides transmission information, number of cylinders and gross horsepower pass sygnificance test. Let's build model, based on them:
+As we can see, besides transmission information, adding number of cylinders and gross horsepower pass sygnificance test. Now, let's check if interactions between these values are significant:
+
+```{r}
+fit1 <- lm(mpg ~ am + cyl + hp, mtcars)
+fit2 <- lm(mpg ~ am + cyl + hp + am*cyl, mtcars)
+fit3 <- lm(mpg ~ am + cyl + hp + am*cyl + am*hp, mtcars)
+fit4 <- lm(mpg ~ am + cyl + hp + am*cyl + am*hp + cyl*hp, mtcars)
+fit5 <- lm(mpg ~ am + cyl + hp + am*cyl + am*hp + cyl*hp + am*cyl*hp, mtcars)
+anova(fit1, fit2, fit3, fit4, fit5)
+```
+
+As we can see, interactions have no significance. So let's take original model:
 
 ```{r}
 fit <- lm(mpg ~ am + cyl + hp, mtcars)
@@ -84,4 +94,21 @@ summary(fit)
 
 As we can see, manual transmission brings more miles per gallon with mean value 4.16 and standard error 1.25. So, this value is significant based on t-test, for >95% confidence interval.
 
+Let's plot given model:
+
+```{r}
+```
+
+And finally let's look at some diagnostics:
+
+```{r}
+```
+
+As we can see,
+
 ## Summary
+
+So, final conclusion is that:
+* we can build acceptable model of relation between miles per gallon value and transmission type, number of cylinders and gross horsepower
+* manual transmission brings more miles per gallon with mean value 4.16 and standard error 1.25
+* manual transmission is significantly better than automatic for miles per gallon
